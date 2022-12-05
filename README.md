@@ -17,19 +17,19 @@ This is the initial [database schema](https://dbdiagram.io/d/630380baf1a9b01b0fb
 
 First you are expected to deliver Travello products through the search API:
 
-- Accessible by `GET /search` route.
-- Only **available** products should be shown.
-- Optionally filter by `startDate` and `endDate`. Default is 2 weeks from today.
+-   Accessible by `GET /search` route.
+-   Only **available** products should be shown.
+-   Optionally filter by `startDate` and `endDate`. Default is 2 weeks from today.
 
 Sample response structure:
 
 ```json
 [
-  {
-    "title": "Desert Safari",
-    "minimumPrice": "250.0 AED",
-    "thumbnail": "https://picsum.photos/300/200"
-  }
+    {
+        "title": "Desert Safari",
+        "minimumPrice": "250.0 AED",
+        "thumbnail": "https://picsum.photos/300/200"
+    }
 ]
 ```
 
