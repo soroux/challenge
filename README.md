@@ -44,7 +44,7 @@ By transparent, we mean the Search API always presents the same response structu
 
 Here is a fictional provider you need to integrate with:
 
-1. Heavenly Tours ([API Docs](https://documenter.getpostman.com/view/24342027/2s8YekQEb6))
+1. Heavenly Tours ([API Docs](https://documenter.getpostman.com/view/24789999/2s8Z6zyrnn))
 
 ## Delivery
 
