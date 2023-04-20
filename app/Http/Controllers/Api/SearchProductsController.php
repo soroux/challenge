@@ -25,6 +25,7 @@ class SearchProductsController extends Controller
         $inputs['startDate'] = $request->startDate ?: now()->toDateString();
         $inputs['endDate'] = $request->startDate ?: now()->addWeeks(2)->toDateString();
         $products = $this->productService->searchProducts($inputs['startDate'], $inputs['endDate']);
+
         return response()->json($products, 200);
     }
 }

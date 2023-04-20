@@ -17,12 +17,14 @@ class TravelloCompanyService implements CompanyServiceInterface
         $query = $this->checkAvailabilityAndMinPrice($query, $startDate, $endDate);
         $products = $query->get();
 
-
         return $this->makeProductSearchObject($products);
 
 
     }
 
+    /**
+     * check availabilities and get add min price parameter
+     */
     private function checkAvailabilityAndMinPrice($query, $startDate, $endDate)
     {
         return $query->withMin('availabilities', 'price')->whereHas('availabilities', function ($availability) use ($startDate, $endDate) {
@@ -30,6 +32,9 @@ class TravelloCompanyService implements CompanyServiceInterface
         });
     }
 
+    /**
+     * create dto object
+     */
     private function makeProductSearchObject($products)
     {
         $searchResults = collect();

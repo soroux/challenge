@@ -18,7 +18,7 @@ class ProductAvailabilitySeeder extends Seeder
     public function run()
     {
         //
-        Product::factory(10)->create()->each(function ($product){
+        Product::factory(10)->create()->each(function ($product) {
             $product->availabilities()->saveMany(Availability::factory(5)->create());
         });
 
