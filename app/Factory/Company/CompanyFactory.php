@@ -3,6 +3,7 @@
 namespace App\Factory\Company;
 
 
+use App\Services\Clients\HeavenlyTour;
 use App\Services\Company\CompanyServiceInterface;
 use App\Services\Company\HeavenlyToursCompanyService;
 use App\Services\Company\TravelloCompanyService;
@@ -13,12 +14,6 @@ class CompanyFactory implements CompanyFactoryInterface
 {
 
     private $companies = [];
-    private $app;
-
-    public function __construct($app)
-    {
-        $this->app = $app;
-    }
 
     public function make($name): CompanyServiceInterface
     {
@@ -43,17 +38,12 @@ class CompanyFactory implements CompanyFactoryInterface
 
     private function createTravelloCompanyService(): TravelloCompanyService
     {
-        $service = new TravelloCompanyService();
-        return $service;
+        return new TravelloCompanyService();
     }
 
     private function createHeavenlyTourCompanyService(): HeavenlyToursCompanyService
     {
-        $config = $this->app['config']['companies.heavenly_tour'];
-        $service = new HeavenlyToursCompanyService();
-        $service->setConfig($config);
-
-        return $service;
+        return new HeavenlyToursCompanyService();
     }
 
 
