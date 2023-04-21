@@ -14,7 +14,7 @@ class CompanyFactoryTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_Company_factory_creates_a_Company_service(): void
+    public function test_Company_factory_creates_travello_Company_service(): void
     {
         $factory = app(CompanyFactoryInterface::class);
         $service = $factory->make('travello');
@@ -24,7 +24,7 @@ class CompanyFactoryTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_Company_factory_creates_b_Company_service(): void
+    public function test_Company_factory_creates_heavenly_tours_Company_service(): void
     {
         $factory = app(CompanyFactoryInterface::class);
         $service = $factory->make('heavenlyTour');

@@ -5,6 +5,7 @@ namespace Tests\Feature\CompanyServices;
 use App\Factory\Company\CompanyFactoryInterface;
 use App\Services\DTOs\ProductSearchObject;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -15,6 +16,7 @@ class heavenlyToursCompanyServiceTest extends TestCase
     function setup(): void
     {
         parent::setUp();
+        Cache::clear();
         $AllToursResponse = [
             [
                 "id" => "acdf-asefaw2342",

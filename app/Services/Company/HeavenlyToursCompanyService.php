@@ -2,6 +2,7 @@
 
 namespace App\Services\Company;
 
+use App\Services\Clients\HeavenlyTour;
 use App\Services\DTOs\ProductSearchObject;
 use Carbon\CarbonPeriod;
 use DateInterval;
@@ -13,7 +14,12 @@ use Illuminate\Support\Facades\Http;
 class HeavenlyToursCompanyService implements CompanyServiceInterface
 {
 
-    private $url;
+    public $heavenlyTour;
+
+    public function __construct()
+    {
+        $this->heavenlyTour = new HeavenlyTour();
+    }
 
     public function getProducts($startDate, $endDate): \Illuminate\Support\Collection
     {
@@ -24,10 +30,6 @@ class HeavenlyToursCompanyService implements CompanyServiceInterface
         return $result;
     }
 
-    public function setConfig($config)
-    {
-        $this->url = $config['url'];
-    }
 
     /**
      * convert date period to date instances in array
@@ -45,27 +47,22 @@ class HeavenlyToursCompanyService implements CompanyServiceInterface
     {
         $productsInDates = collect();
         foreach ($dates as $date) {
-            $productsPerDate = Cache::remember('heavenly-tours-products-' . $date, 1440 * 60, function () use ($date, $productsInDates) {
-                $response = Http::get($this->url . 'tour-prices?travelDate=' . $date->toDateString());
-                if ($response->successful()) {
-                    $productsPerDate = $response->collect();
-                    $productsPerDate = $this->checkAvailability($productsPerDate, $date);
+            $availableProductsPerDate = Cache::remember('heavenly-tours-products-' . $date, 1440 * 60, function () use ($date, $productsInDates) {
+                $productsPerDate = $this->heavenlyTour->getToursByDate($date);
 
-                }
-                return $productsPerDate;
+                return $this->checkAvailability($productsPerDate, $date);
             });
-            $productsInDates->add($productsPerDate);
+            $productsInDates->add($availableProductsPerDate);
         }
         return $productsInDates->flatten(1)->groupBy('tourId');
     }
 
     private function checkAvailability($products, $date)
     {
-
-        foreach ($products as $key => $tour) {
-            $response = Http::get($this->url . 'tours/' . $tour['tourId'] . '/availability?travelDate=' . $date->toDateString());
-            if ($response->successful()) {
-                if ($response->json('available') == false) {
+        if ($products) {
+            foreach ($products as $key => $tour) {
+                $availability = $this->heavenlyTour->getTourAvailability($tour, $date);
+                if (!$availability) {
                     $products->forget($key);
                 }
             }
@@ -81,14 +78,15 @@ class HeavenlyToursCompanyService implements CompanyServiceInterface
         $searchResults = collect();
         foreach ($allProductsInSelectedDates as $id => $allProductsInSelectedDate) {
             $product = collect();
-            $response = Http::get($this->url . 'tours/' . $id);
-            if ($response->successful()) {
-                $product->title = $response->json(['title']);
-                $product->thumbnail = $this->getThumbnail($response->json(['photos']))['url'];
+           $tour = $this->heavenlyTour->getTourInfo($id);
+            if ($tour) {
+                $product->title = $tour['title'];
+                $product->thumbnail = $this->getThumbnail($tour['photos'])['url'];
                 $product->minPrice = $allProductsInSelectedDate->min('price');
+                $searchResult = new ProductSearchObject($product->title, $product->minPrice, $product->thumbnail);
+                $searchResults->add($searchResult);
             }
-            $searchResult = new ProductSearchObject($product->title, $product->minPrice, $product->thumbnail);
-            $searchResults->add($searchResult);
+
         }
 
         return $searchResults;
