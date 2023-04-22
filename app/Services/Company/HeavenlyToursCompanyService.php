@@ -91,7 +91,9 @@ class HeavenlyToursCompanyService implements CompanyServiceInterface
         $searchResults = collect();
         foreach ($allProductsInSelectedDates as $id => $allProductsInSelectedDate) {
             $product = collect();
-            $tour = $this->heavenlyTour->getTourInfo($id);
+            $tour = Cache::remember('heavenly-tour-products-Info-' . $id, 1440 * 60, function () use ($id) {
+                return $this->heavenlyTour->getTourInfo($id);
+            });
             if ($tour) {
                 $product->title = $tour['title'];
                 $product->thumbnail = $this->getThumbnail($tour['photos']);

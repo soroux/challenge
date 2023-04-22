@@ -12,7 +12,8 @@ return [
     */
 
     "heavenly_tour"=>[
-        'url'=>'http://161.35.193.238:3006/api/'
+        'url'=>'http://161.35.193.238:3006/api/',
+        'cachingDates'=>14
     ],
 
 
