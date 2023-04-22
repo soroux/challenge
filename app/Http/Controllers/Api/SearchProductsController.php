@@ -2,25 +2,28 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Services\ProductService;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SearchProductRequest;
-use App\Services\ProductService;
-use Illuminate\Http\Request;
 
 class SearchProductsController extends Controller
 {
-    //
-    //
+    private ProductService $productService;
+
     /**
-     * @param ProductService $balanceService
+     * @param ProductService $productService
      */
     public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
     }
 
-
-    public function searchProduct(SearchProductRequest $request)
+    /**
+     * @param SearchProductRequest $request
+     * @return JsonResponse
+     */
+    public function searchProduct(SearchProductRequest $request): JsonResponse
     {
         $inputs['startDate'] = $request->startDate ?: now()->toDateString();
         $inputs['endDate'] = $request->startDate ?: now()->addWeeks(2)->toDateString();

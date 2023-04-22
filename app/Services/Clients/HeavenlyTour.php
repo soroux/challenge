@@ -24,7 +24,7 @@ class HeavenlyTour
                 return $tour;
             }
         } catch (\Exception $exception) {
-            logger('getTours endpoint HasError');
+            logger('getTours endpoint HasError:'.$exception->getMessage());
         }
         return null;
 
@@ -39,7 +39,7 @@ class HeavenlyTour
                 return $tour;
             }
         } catch (\Exception $exception) {
-            logger('getTourInfo endpoint HasError');
+            logger('getTourInfo endpoint HasError:'.$exception->getMessage());
         }
         return null;
     }
@@ -52,7 +52,7 @@ class HeavenlyTour
                 return $response->collect();
             }
         } catch (\Exception $exception) {
-            logger('getToursByDate endpoint HasError');
+            logger('getToursByDate endpoint HasError:'.$exception->getMessage());
         }
         return null;
 
@@ -67,7 +67,7 @@ class HeavenlyTour
 
             }
         } catch (\Exception $exception) {
-            logger('getTourAvailability endpoint HasError');
+            logger('getTourAvailability endpoint HasError:'.$exception->getMessage());
 
         }
         return null;

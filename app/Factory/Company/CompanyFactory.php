@@ -3,18 +3,24 @@
 namespace App\Factory\Company;
 
 
-use App\Services\Clients\HeavenlyTour;
+use Exception;
+use Illuminate\Support\Arr;
+use App\Services\Company\TravelloCompanyService;
 use App\Services\Company\CompanyServiceInterface;
 use App\Services\Company\HeavenlyToursCompanyService;
-use App\Services\Company\TravelloCompanyService;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Config;
 
 class CompanyFactory implements CompanyFactoryInterface
 {
 
-    private $companies = [];
+    private array $companies = [];
 
+    /**
+     * @param $name
+     *
+     * @return CompanyServiceInterface
+     *
+     * @throws Exception
+     */
     public function make($name): CompanyServiceInterface
     {
         $service = Arr::get($this->companies, $name);
@@ -26,7 +32,7 @@ class CompanyFactory implements CompanyFactoryInterface
 
         $createMethod = 'create' . ucfirst($name) . 'CompanyService';
         if (!method_exists($this, $createMethod)) {
-            throw new \Exception("Company $name is not supported");
+            throw new Exception("Company $name is not supported");
         }
 
         $service = $this->{$createMethod}();
@@ -36,11 +42,18 @@ class CompanyFactory implements CompanyFactoryInterface
         return $service;
     }
 
+    /**
+     * Due to the chance of creating a microservice for this feature .
+     * @return TravelloCompanyService
+     */
     private function createTravelloCompanyService(): TravelloCompanyService
     {
         return new TravelloCompanyService();
     }
 
+    /**
+     * @return HeavenlyToursCompanyService
+     */
     private function createHeavenlyTourCompanyService(): HeavenlyToursCompanyService
     {
         return new HeavenlyToursCompanyService();

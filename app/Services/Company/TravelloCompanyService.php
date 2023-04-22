@@ -3,29 +3,34 @@
 namespace App\Services\Company;
 
 use App\Models\Product;
+use Illuminate\Support\Collection;
 use App\Services\DTOs\ProductSearchObject;
-use Illuminate\Support\Facades\Http;
 
 class TravelloCompanyService implements CompanyServiceInterface
 {
 
-
-    public function getProducts($startDate, $endDate)
+    /**
+     * @param $startDate
+     * @param $endDate
+     * @return Collection
+     */
+    public function getProducts($startDate, $endDate): Collection
     {
-
         $query = Product::query();
         $query = $this->checkAvailabilityAndMinPrice($query, $startDate, $endDate);
         $products = $query->get();
 
         return $this->makeProductSearchObject($products);
-
-
     }
 
     /**
+     * @param $query
+     * @param $startDate
+     * @param $endDate
      * check availabilities and get add min price parameter
+     * @return mixed
      */
-    private function checkAvailabilityAndMinPrice($query, $startDate, $endDate)
+    private function checkAvailabilityAndMinPrice($query, $startDate, $endDate): mixed
     {
         return $query->withMin('availabilities', 'price')->whereHas('availabilities', function ($availability) use ($startDate, $endDate) {
             $availability->where('start_time', '>=', $startDate)->where('end_time', '<=', $endDate);
@@ -33,9 +38,11 @@ class TravelloCompanyService implements CompanyServiceInterface
     }
 
     /**
+     * @param $products
      * create dto object
+     * @return Collection
      */
-    private function makeProductSearchObject($products)
+    private function makeProductSearchObject($products): Collection
     {
         $searchResults = collect();
         foreach ($products as $product) {
@@ -44,6 +51,4 @@ class TravelloCompanyService implements CompanyServiceInterface
         }
         return $searchResults;
     }
-
-
 }
